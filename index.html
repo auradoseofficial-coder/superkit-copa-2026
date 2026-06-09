@@ -314,6 +314,8 @@
       function App() {
         const [faqOpen, setFaqOpen] = useState({});
         const [showStickyCta, setShowStickyCta] = useState(false);
+        const [showUpsellPopup, setShowUpsellPopup] = useState(false);
+        const [countdownSeconds, setCountdownSeconds] = useState(600); // 10 minutes
         const [imgErrors, setImgErrors] = useState({});
         const [stats, setStats] = useState({
           stickers: 0,
@@ -327,6 +329,35 @@
 
         const toggleFaq = (index) => {
           setFaqOpen(prev => ({ ...prev, [index]: !prev[index] }));
+        };
+
+        // Reset countdown when popup opens
+        useEffect(() => {
+          if (showUpsellPopup) {
+            setCountdownSeconds(600);
+          }
+        }, [showUpsellPopup]);
+
+        // Countdown timer interval
+        useEffect(() => {
+          if (!showUpsellPopup) return;
+          const interval = setInterval(() => {
+            setCountdownSeconds(prev => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+          return () => clearInterval(interval);
+        }, [showUpsellPopup]);
+
+        // Helper to format countdown seconds
+        const formatTime = (totalSeconds) => {
+          const mins = Math.floor(totalSeconds / 60);
+          const secs = totalSeconds % 60;
+          return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         };
 
         useEffect(() => {
@@ -702,7 +733,7 @@
                       </div>
                       <div>
                         <div className="text-xs text-[#FFDF00]/80 font-mono">CUSTO DO PRODUTO</div>
-                        <div className="text-2xl font-black text-[#FFDF00] font-condensed">R$ 49,90</div>
+                        <div className="text-2xl font-black text-[#FFDF00] font-condensed">R$ 9,99</div>
                       </div>
                     </div>
                   </div>
@@ -975,41 +1006,111 @@
                   </p>
                 </div>
 
-                <div className="bg-darkCard text-white rounded-container-lg p-8 md:p-12 border-2 border-[#FFDF00] shadow-2xl max-w-2xl mx-auto pricing-card">
-                  <div className="text-center mb-8">
-                    <span className="bg-[#009B3A] text-white text-xs font-mono font-bold uppercase tracking-widest px-4 py-1.5 rounded-full font-bold">ACESSO IMEDIATO</span>
-                    <h3 className="text-2xl font-bold font-condensed uppercase mt-4 text-white">SUPERKIT DIGITAL COPA 2026</h3>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
+                  
+                  {/* Card 1: Standard (Seleções e Brilhantes) */}
+                  <div className="bg-darkCard text-white rounded-container-lg p-8 md:p-10 border-2 border-[#009B3A] hover:border-[#FFDF00]/30 shadow-2xl flex flex-col justify-between pricing-card relative transition-all duration-300">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#009B3A] text-white text-xs font-mono font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-md z-10">
+                      MAIS VENDIDO
+                    </div>
 
-                  <ul className="space-y-4 mb-8">
-                    <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
-                      <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
-                      <span>**Todas as 980 Figurinhas** da Copa do Mundo 2026 completas.</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
-                      <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
-                      <span>**Uma única compra**: economize centenas de reais em pacotes de repetidas.</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
-                      <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
-                      <span>**Custo de poucos pacotes** para ter acesso a toda a coleção.</span>
-                    </li>
-                  </ul>
+                    <div className="mt-2">
+                      <div className="text-center mb-8">
+                        <h3 className="text-2xl font-bold font-condensed uppercase mt-4 text-white">Figurinhas da Copa 2026<br/>Seleções e Brilhantes</h3>
+                      </div>
 
-                  <div className="border-t border-white/5 pt-6 mb-8 text-center">
-                    <div className="text-darkTextSecondary/50 text-sm line-through">De R$ 149,90</div>
-                    <div className="flex items-baseline justify-center gap-1 my-2">
-                      <span className="text-darkTextSecondary font-bold text-lg">Por apenas</span>
-                      <span className="text-white text-5xl font-bold font-condensed">R$ 49,90</span>
+                      <ul className="space-y-4 mb-8">
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Todas as figurinhas das seleções</strong> da Copa do Mundo 2026</span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Todas as figurinhas brilhantes</strong> inclusas</span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span>Uma única compra, sem repetidas</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <div className="border-t border-white/5 pt-6 mb-8 text-center">
+                        <div className="text-darkTextSecondary/50 text-sm line-through">De R$ 97,90</div>
+                        <div className="text-[#009B3A] text-xs font-mono font-bold mt-0.5 mb-2">🔥 Economize R$ 87,91</div>
+                        <div className="flex items-baseline justify-center gap-1 my-2">
+                          <span className="text-darkTextSecondary font-bold text-lg">Por apenas</span>
+                          <span className="text-white text-5xl font-bold font-condensed">R$ 9,99</span>
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={() => setShowUpsellPopup(true)} 
+                        className="magnetic-button block w-full text-center py-4 bg-white/10 hover:bg-white/20 text-white font-extrabold uppercase tracking-widest text-sm rounded-full shadow-lg transition-colors"
+                      >
+                        <span>Garantir meu pack</span>
+                      </button>
                     </div>
                   </div>
 
-                  <a 
-                    href="https://pay.exemplo.com/superkit-copa-2026" 
-                    className="magnetic-button block w-full text-center py-4 bg-[#009B3A] hover:bg-[#002776] text-white font-extrabold uppercase tracking-widest text-sm rounded-full shadow-lg transition-colors"
+                  {/* Card 2: Premium Combo (Seleções + Legends + Coca + McDonald's) */}
+                  <div 
+                    className="bg-darkCard text-white rounded-container-lg p-8 md:p-10 border-2 border-[#FFDF00] flex flex-col justify-between pricing-card relative transition-all duration-300"
+                    style={{ boxShadow: "0 0 40px rgba(255, 223, 0, 0.2)" }}
                   >
-                    <span>Garantir meu pack</span>
-                  </a>
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FFDF00] text-[#002776] text-xs font-mono font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-md z-10">
+                      MAIS COMPLETO
+                    </div>
+
+                    <div className="mt-2">
+                      <div className="text-center mb-8">
+                        <h3 className="text-2xl font-bold font-condensed uppercase mt-4 text-white">COMBO SELEÇÕES, BRILHANTES, LEGENDS, McDONALD'S E COCA-COLA</h3>
+                      </div>
+
+                      <ul className="space-y-4 mb-8">
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Todas as figurinhas das seleções</strong> da Copa do Mundo 2026</span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Todas as figurinhas brilhantes</strong> inclusas</span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Figurinhas exclusivas Legends</strong></span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span><strong>Figurinhas McDonald's e Coca-Cola</strong> inclusas</span>
+                        </li>
+                        <li className="flex items-start gap-3 text-darkTextSecondary text-sm">
+                          <CheckIcon className="w-5 h-5 text-[#009B3A] shrink-0 mt-0.5" />
+                          <span>Pacote completo, uma única compra</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <div className="border-t border-white/5 pt-6 mb-8 text-center">
+                        <div className="text-darkTextSecondary/50 text-sm line-through">De R$ 149,90</div>
+                        <div className="text-[#009B3A] text-xs font-mono font-bold mt-0.5 mb-2">🔥 Economize R$ 130,00</div>
+                        <div className="flex items-baseline justify-center gap-1 my-2">
+                          <span className="text-darkTextSecondary font-bold text-lg">Por apenas</span>
+                          <span className="text-[#FFDF00] text-5xl font-bold font-condensed">R$ 19,90</span>
+                        </div>
+                      </div>
+
+                      <a 
+                        href="https://pay.cakto.com.br/3fik4ps_917776" 
+                        className="magnetic-button block w-full text-center py-4 bg-[#009B3A] hover:bg-[#002776] text-white font-extrabold uppercase tracking-widest text-sm rounded-full shadow-lg transition-colors"
+                      >
+                        <span>Garantir meu pack</span>
+                      </a>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </section>
@@ -1114,6 +1215,66 @@
                 >
                   Garantir meu pack
                 </a>
+              </div>
+            )}
+
+            {/* UPSELL POPUP MODAL */}
+            {showUpsellPopup && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+                <div className="bg-darkSurface border-2 border-[#FFDF00] rounded-container-lg p-6 md:p-8 max-w-lg w-full text-center shadow-2xl relative animate-scale-up">
+                  
+                  {/* Taça image at the top */}
+                  <div className="flex justify-center mb-4">
+                    <img 
+                      src="images/stickers/taca.png" 
+                      alt="Taça da Copa" 
+                      className="w-[120px] h-[120px] object-contain"
+                    />
+                  </div>
+
+                  <span className="font-condensed text-xs uppercase tracking-[0.2em] text-[#FFDF00] block mb-1 font-bold">OFERTA EXCLUSIVA</span>
+                  
+                  <h3 className="text-xl md:text-2xl font-sporty font-normal uppercase text-white tracking-wide mb-2 leading-tight">
+                    COMBO SELEÇÕES, BRILHANTES, LEGENDS, McDONALD'S E COCA-COLA
+                  </h3>
+
+                  {/* Countdown Timer */}
+                  <div className="text-[#FFDF00] font-mono text-xs md:text-sm font-bold mb-4">
+                    ⏱ Oferta expira em {formatTime(countdownSeconds)}
+                  </div>
+                  
+                  <p className="text-darkTextSecondary text-xs md:text-sm leading-relaxed mb-6">
+                    🔥 Por tempo limitado: leve o pack completo com seleções, brilhantes, Legends, McDonald's e Coca-Cola por muito menos!
+                    <span className="block text-base text-darkTextSecondary/50 line-through mt-3">De R$ 19,90</span>
+                    Por apenas <span className="text-[#FFDF00] font-bold text-2xl">R$ 14,90</span>
+                  </p>
+                  
+                  <div className="flex flex-col gap-4 items-center">
+                    <a
+                      href="https://pay.cakto.com.br/3ez4xag"
+                      className="w-full py-4 bg-[#009B3A] hover:bg-[#002776] text-white font-extrabold uppercase tracking-widest text-xs rounded-full shadow-lg transition-colors"
+                    >
+                      Quero o Combo por R$ 14,90
+                    </a>
+                    
+                    <a
+                      href="https://pay.cakto.com.br/3fwrwzy_916987"
+                      className="text-xs text-darkTextSecondary hover:text-white underline transition-colors uppercase font-bold tracking-wider mt-2"
+                    >
+                      Não, quero só Seleções e Brilhantes por R$ 9,99
+                    </a>
+                  </div>
+                  
+                  {/* Close button top right */}
+                  <button 
+                    onClick={() => setShowUpsellPopup(false)}
+                    className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             )}
 
