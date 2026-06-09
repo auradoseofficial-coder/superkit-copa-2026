@@ -596,9 +596,9 @@
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-[#009B3A]/5 rounded-full blur-[100px] pointer-events-none" />
               
               <div className="max-w-6xl mx-auto px-6 mb-16 relative z-10 text-center">
-                <span className="font-condensed text-sm uppercase tracking-[0.2em] text-[#FFDF00] block mb-3 font-bold">COLEÇÃO EXCLUSIVA</span>
+                <span className="font-condensed text-sm uppercase tracking-[0.2em] text-[#009B3A] block mb-3 font-bold">COLEÇÃO EXCLUSIVA</span>
                 <h2 className="text-4xl md:text-6xl font-sporty font-normal uppercase text-white tracking-wide">
-                  OS CRAQUES NO SEU ÁLBUM
+                  OS <span className="text-[#FFDF00]">CRAQUES</span> NO SEU ÁLBUM
                 </h2>
                 <p className="text-darkTextSecondary mt-4 text-sm md:text-base leading-relaxed font-condensed tracking-wide max-w-2xl mx-auto">
                   Messi, Mbappé, Vinícius Jr., Bellingham, Yamal e todas as maiores estrelas da Copa organizadas e prontas para você imprimir. Chega de torcer para encontrar a figurinha certa.
@@ -769,8 +769,11 @@
             <section id="prova" className="py-24 bg-darkBg">
               <div className="max-w-6xl mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20">
-                  <span className="font-condensed text-sm uppercase tracking-[0.2em] text-[#FFDF00] block mb-2 font-black">TUDO O QUE VOCÊ RECEBE</span>
-                  <h2 className="text-4xl md:text-6xl font-sporty font-normal uppercase text-white tracking-wide">ENTREGUE DIRETO NO SEU E-MAIL</h2>
+                  <span className="font-condensed text-sm uppercase tracking-[0.2em] text-[#009B3A] block mb-2 font-black">TUDO O QUE VOCÊ RECEBE</span>
+                  <h2 className="text-4xl md:text-6xl font-sporty font-normal uppercase text-white tracking-wide">
+                    <span className="md:hidden">ENTREGUE <span className="text-[#FFDF00]">DIRETO</span><br/>NO SEU E-MAIL</span>
+                    <span className="hidden md:block">ENTREGUE <span className="text-[#FFDF00]">DIRETO</span> NO SEU E-MAIL</span>
+</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
